@@ -19,13 +19,31 @@ html hazir hale geelecek DOM content gelecek */
 
 
 
+
+function saveToLS(){
+  const listItems = shoppingList.querySelectorAll('li')
+  const listAll = []
+
+  for(let li of listItems){
+    const id = li.getAttribute('item-id')
+    const name = li.querySelector('.item-name').textContent;
+    const completed = li.hasAttribute('item-completed')
+
+    listAll.push({id: id, name: name, completed: completed})
+  }
+
+  localStorage.setItem('shoppingItems', JSON.stringify(listAll))
+}
+
 function loadItems() {
-  const items = [
+/*   const items = [
     {id:1, name: "Ägg", completed: false},
     {id:2, name: "Yogurt", completed: true},
     {id:3, name: "Brödd", completed: false},
     {id:4, name: "Oliv", completed: false},
-  ];
+  ]; */
+
+  const items = JSON.parse(localStorage.getItem('shoppingItems')) || []
 
   shoppingList.innerHTML = '';
 
@@ -46,8 +64,12 @@ function addItem(input) {
   })
   /* shoppingList.appendChild(newItem) */ // appendChild liste sonuna ekler
   shoppingList.prepend(newItem) // prepend liste Basina ekler
+
   input.value = ''
+
   updateFilteredItems()
+
+  saveToLS()
 }
 
 function generateId() {
@@ -69,12 +91,14 @@ function toggleCompleted(e){
   const li = e.target.parentElement;
   li.toggleAttribute('item-completed', e.target.checked)
   updateFilteredItems()
+  saveToLS()
 }
 
 function removeItem(e) {
   /* console.log(e.target.parentElement) */
    const li = e.target.parentElement
    shoppingList.removeChild(li)
+   saveToLS()
 }
 
 function openEditMode(e) {
@@ -89,6 +113,7 @@ function closeEditMode(e) {
   e.target.contentEditable = false
   /*Blur metoduyla mouse baska bir yere gittiginde 
   contentEdittable i false yap*/
+  saveToLS()
 }
 
 function cancelEnter(e) {
@@ -121,6 +146,7 @@ function createListItem(item) {
 
   //create li
   const li = document.createElement('li')
+  li.setAttribute("item-id", item.id)
   li.className = 'border rounded p-3 mb-1'
   li.toggleAttribute('item-completed', item.completed)
 
