@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
+.shopping-list li {
+  display: flex;
+  align-items: center;
+  background-color: antiquewhite;
+  gap: .5rem;
+  .item-name {
+    flex: 1;
+    padding: .3rem .8rem;
+  }
+}
+
+.shopping-list li .delete-icon {
+  transform: scale(0);
+  transition: transform 200ms;
+}
+
+.shopping-list li:hover .delete-icon {
+  transform: scale(1);
+}
