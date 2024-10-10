@@ -1,9 +1,16 @@
 const shoppingList = document.querySelector('.shopping-list')
 const shoppingForm = document.querySelector('.shopping-form')
 
-loadItems();
 
-shoppingForm.addEventListener('submit', handleFormSubmit)
+document.addEventListener('DOMContentLoaded', function() {
+  loadItems();
+  shoppingForm.addEventListener('submit', handleFormSubmit)
+}) 
+// Titta på google -> DOMContentLoaded
+/* DOMContentLoaded cagrildigi anda bilesenlerin tamamen olusturulmasi
+html hazir hale geelecek DOM content gelecek */
+
+
 
 function loadItems() {
   const items = [
@@ -54,6 +61,33 @@ function toggleCompleted(e){
   li.toggleAttribute('item-completed', e.target.checked)
 }
 
+function removeItem(e) {
+  /* console.log(e.target.parentElement) */
+   const li = e.target.parentElement
+   shoppingList.removeChild(li)
+}
+
+function openEditMode(e) {
+  const li = e.target.parentElement
+  if(li.hasAttribute('item-completed') == false){
+    e.target.contentEditable = true;
+    //contentEditable veriyi guncelleme
+  }
+}
+
+function closeEditMode(e) {
+  e.target.contentEditable = false
+  /*Blur metoduyla mouse baska bir yere gittiginde 
+  contentEdittable i false yap*/
+}
+
+function cancelEnter(e) {
+  if(e.key == 'Enter'){
+    e.preventDefault() //Default  ozelligi kapatiyoruz
+    closeEditMode()
+  }
+}
+
 function createListItem(item) {
   //chechkBox
   const input = document.createElement('input');
@@ -66,10 +100,14 @@ function createListItem(item) {
   const div = document.createElement('div');
   div.textContent = item.name
   div.classList.add('item-name')
-
+  div.addEventListener('click', openEditMode)
+  div.addEventListener('blur', closeEditMode)
+  div.addEventListener('keydown', cancelEnter)
+  
   //delete icon
   const deleteIcon = document.createElement('i')
   deleteIcon.className = 'fs-3 bi bi-x text-danger delete-icon'
+  deleteIcon.addEventListener('click', removeItem)
 
   //create li
   const li = document.createElement('li')
