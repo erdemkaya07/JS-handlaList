@@ -1,10 +1,17 @@
 const shoppingList = document.querySelector('.shopping-list')
 const shoppingForm = document.querySelector('.shopping-form')
+const filterButtons = document.querySelectorAll('.filter-buttons button')
 
 
 document.addEventListener('DOMContentLoaded', function() {
+
   loadItems();
+
   shoppingForm.addEventListener('submit', handleFormSubmit)
+
+  for(let button of filterButtons){
+    button.addEventListener('click',handleFilterSelection)
+  }
 }) 
 // Titta på google -> DOMContentLoaded
 /* DOMContentLoaded cagrildigi anda bilesenlerin tamamen olusturulmasi
@@ -121,3 +128,14 @@ function createListItem(item) {
   return li;
 }
 
+function handleFilterSelection(e) {
+  const filterBtn = e.target;
+
+  for(let button of filterButtons){
+    button.classList.add('btn-secondary')
+    button.classList.remove('btn-primary')
+  }
+  filterBtn.classList.add('btn-primary')
+  filterBtn.classList.remove('btn-secondary')
+
+}
