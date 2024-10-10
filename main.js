@@ -47,6 +47,7 @@ function addItem(input) {
   /* shoppingList.appendChild(newItem) */ // appendChild liste sonuna ekler
   shoppingList.prepend(newItem) // prepend liste Basina ekler
   input.value = ''
+  updateFilteredItems()
 }
 
 function generateId() {
@@ -64,8 +65,10 @@ function handleFormSubmit(e) {
 }
 
 function toggleCompleted(e){
+  //checkboxta ki islemler
   const li = e.target.parentElement;
   li.toggleAttribute('item-completed', e.target.checked)
+  updateFilteredItems()
 }
 
 function removeItem(e) {
@@ -138,4 +141,36 @@ function handleFilterSelection(e) {
   filterBtn.classList.add('btn-primary')
   filterBtn.classList.remove('btn-secondary')
 
+  //Hangi buton seciliyor
+  /* console.log(filterBtn.getAttribute('item-filter')) */
+  filterItems(filterBtn.getAttribute('item-filter'))
+}
+
+function filterItems(filterType) {
+  const liItems = shoppingList.querySelectorAll('li');
+  for(let li of liItems){
+
+    //ClassList te yaptigimiz isleme if oncesi sifirlama diyebiliriz
+    li.classList.remove('d-flex');
+    li.classList.remove('d-none');
+    
+    const itemCompleted = li.hasAttribute('item-completed')
+    /* FilterType console loga yazdirdigimiz all,incomplete,complete */
+    if(filterType == "completed"){
+      //tamamlananlari goster
+      li.classList.toggle(itemCompleted ? 'd-flex':'d-none')
+    } else if(filterType == "incomplete"){
+      //tamamlanmayanlari goster 
+      li.classList.toggle(itemCompleted ? 'd-none':'d-flex')
+    } else {
+      //hepsini goster
+      li.classList.toggle('d-flex')
+    } 
+  }
+}
+
+function updateFilteredItems() {
+  //active olan butonu sec
+  const activeFilter = document.querySelector('.btn-primary[item-filter]')
+  filterItems(activeFilter.getAttribute("item-filter"))
 }
